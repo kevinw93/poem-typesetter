@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poem Typesetter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- One link per family so a single bad request can't break the others. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside>
+    <h1>Poem Typesetter</h1>
+
+    <section>
+      <h2>Text style</h2>
+      <p class="hint" id="styleHint">Select text (it can span pages), then change its style. With nothing selected, changes apply to what you type next. Alignment applies to whole lines.</p>
+      <label>Apply to
+        <select id="styleScope"><option value="sel">Selected text</option><option value="all">All text</option></select>
+      </label>
+      <label>Font
+        <select data-style="font">
+          <option>EB Garamond</option>
+          <option>Libron</option>
+          <option>Cormorant Garamond</option>
+          <option>Lora</option>
+          <option>Libre Baskerville</option>
+          <option>Crimson Text</option>
+          <option>Playfair Display</option>
+          <option>Inter</option>
+          <option>IBM Plex Mono</option>
+          <option>Georgia</option>
+          <option>Times New Roman</option>
+          <option>Helvetica</option>
+        </select>
+      </label>
+      <div class="row">
+        <label>Size <input type="number" data-style="size" min="4" max="400"></label>
+        <label>Color <input type="color" data-style="color"></label>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" data-style="bold"> Bold (⌘B)</label>
+        <label class="check"><input type="checkbox" data-style="italic"> Italic (⌘I)</label>
+      </div>
+      <label>Line alignment
+        <select data-style="align">
+          <option value="left">Left</option><option value="center">Center</option><option value="right">Right</option>
+        </select>
+      </label>
+    </section>
+
+    <section>
+      <h2>Spacing</h2>
+      <div class="row">
+        <label>Wrap width (px) <input type="number" data-key="wrapWidth" min="50" step="10"></label>
+        <label>Hanging indent <input type="number" data-key="hang" min="0" step="5"></label>
+      </div>
+      <label>Line height <input type="number" data-key="lineHeight" min="0.8" max="4" step="0.05"></label>
+      <p class="sub">Margins (px)</p>
+      <div class="row three">
+        <label>Top <input type="number" data-key="mt" min="0"></label>
+        <label>Right <input type="number" data-key="mr" min="0"></label>
+        <label>Left <input type="number" data-key="ml" min="0"></label>
+      </div>
+      <label class="check"><input type="checkbox" data-key="linkMargins"> Link margins</label>
+      <label>Flow to next page at (px from bottom) <input type="number" data-key="mb" min="0"></label>
+      <label class="check"><input type="checkbox" data-key="flowSameAsTop"> Same as top margin</label>
+      <label class="check"><input type="checkbox" data-key="keepStanzas"> Keep stanzas together</label>
+      <p class="hint">Off: a stanza that doesn't fit is split across pages, leaving less empty space.</p>
+    </section>
+
+    <section>
+      <h2>Page</h2>
+      <label>Size preset
+        <select data-key="preset">
+          <option value="1080x1080">Square 1080×1080</option>
+          <option value="1080x1350">Portrait 1080×1350</option>
+          <option value="1080x1920">Story 1080×1920</option>
+          <option value="2480x3508">A4 @ 300 DPI</option>
+          <option value="2550x3300">Letter @ 300 DPI</option>
+          <option value="custom">Custom</option>
+        </select>
+      </label>
+      <div class="row">
+        <label>Width <input type="number" data-key="width" min="100"></label>
+        <label>Height <input type="number" data-key="height" min="100"></label>
+      </div>
+      <label>Background <input type="color" data-key="bg"></label>
+      <label class="check"><input type="checkbox" data-key="transparent"> Transparent background (PNG only)</label>
+      <label class="check"><input type="checkbox" data-key="pageNumbers"> Page numbers</label>
+    </section>
+
+    <section>
+      <h2>Export</h2>
+      <div class="row">
+        <label>Scale
+          <select data-key="scale"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+        </label>
+        <label>Format
+          <select data-key="format"><option value="png">PNG</option><option value="jpeg">JPEG</option></select>
+        </label>
+      </div>
+      <label>JPEG quality <input type="number" data-key="quality" min="0.6" max="1" step="0.02"></label>
+      <p id="info" class="info"></p>
+      <div class="row">
+        <button type="button" id="downloadPage">Download this page</button>
+        <button type="button" id="downloadAll">Download all</button>
+      </div>
+      <button type="button" id="reset" class="secondary">Reset to defaults</button>
+    </section>
+  </aside>
+
+  <main>
+    <div id="stage">
+      <div id="doc" contenteditable="true" spellcheck="false"></div>
+    </div>
+    <div id="carousel"></div>
+  </main>
+
+  <!-- Off-screen copy of a page, used to measure exact line positions. -->
+  <div id="measure" aria-hidden="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+/* Libron (SIL Open Font License, see fonts/libron/LICENSE.txt), bundled locally. */
+@font-face { font-family: 'Libron'; font-weight: 400; font-style: normal; font-display: swap; src: url('fonts/libron/Libron-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Libron'; font-weight: 700; font-style: normal; font-display: swap; src: url('fonts/libron/Libron-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'Libron'; font-weight: 400; font-style: italic; font-display: swap; src: url('fonts/libron/Libron-Italic.woff2') format('woff2'); }
+@font-face { font-family: 'Libron'; font-weight: 700; font-style: italic; font-display: swap; src: url('fonts/libron/Libron-BoldItalic.woff2') format('woff2'); }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  font: 14px/1.4 system-ui, sans-serif;
+  color: #222;
+  background: #e9e7e2;
+  overflow: hidden;
+}
+
+/* ---------- sidebar ---------- */
+
+aside { overflow-y: auto; padding: 16px; background: #fff; border-right: 1px solid #ddd; }
+h1 { font-size: 18px; margin: 0 0 12px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: #666; margin: 0 0 8px; }
+section { padding: 12px 0; border-top: 1px solid #eee; }
+
+label { display: block; margin-bottom: 8px; font-size: 12px; color: #444; }
+label > input:not([type=checkbox]), label > select { display: block; width: 100%; margin-top: 2px; }
+input, select, button { font: inherit; }
+input[type=text], input[type=number], select { padding: 4px 6px; border: 1px solid #ccc; border-radius: 4px; }
+input[type=color] { height: 30px; padding: 0 2px; }
+.hex { display: block; width: 100%; margin-top: 4px; padding: 3px 6px; border: 1px solid #ccc; border-radius: 4px; font: 12px ui-monospace, monospace; }
+.hex.bad { border-color: #ef4444; }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.row.three { grid-template-columns: repeat(3, 1fr); }
+.check { display: flex; align-items: center; gap: 6px; }
+#styleHint.flash { color: #b91c1c; }
+.hint, .sub { font-size: 12px; color: #777; margin: 6px 0; }
+.info { font-size: 12px; color: #333; background: #f4f4f4; padding: 6px 8px; border-radius: 4px; }
+
+button { padding: 6px 10px; border: 1px solid #333; border-radius: 4px; background: #222; color: #fff; cursor: pointer; margin-bottom: 8px; }
+button.secondary { background: #fff; color: #222; border-color: #ccc; }
+
+/* ---------- main: editor + carousel ---------- */
+
+main { display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+
+#stage {
+  position: relative;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+/* All pages live in one editable element so selections can span pages. */
+#doc { display: flex; flex-direction: column; gap: 24px; outline: none; }
+#doc .page { flex: none; box-shadow: 0 2px 12px rgba(0,0,0,.18); }
+#doc .page.overflow { outline: 3px solid #ef4444; }
+.pagenum { user-select: none; }
+::highlight(saved) { background-color: rgba(59, 130, 246, .3); }
+
+#carousel {
+  display: flex; gap: 12px; align-items: flex-end;
+  overflow-x: auto;
+  padding: 12px 16px;
+  background: #f6f5f2;
+  border-top: 1px solid #ddd;
+}
+.thumb { position: relative; flex: none; cursor: pointer; text-align: center; font-size: 11px; color: #555; }
+.thumb canvas {
+  display: block; height: 120px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  outline: 3px solid transparent;
+  background: repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 0 0 / 12px 12px;
+}
+.thumb.selected canvas { outline-color: #3b82f6; }
+.thumb.overflow canvas { outline-color: #ef4444; }
+.thumb .del {
+  position: absolute; top: -6px; right: -6px;
+  width: 20px; height: 20px; padding: 0; margin: 0;
+  border-radius: 50%; font-size: 12px; line-height: 18px;
+  background: #fff; color: #333; border-color: #bbb;
+  display: none;
+}
+.thumb:hover .del { display: block; }
+.add {
+  flex: none; height: 120px; width: 90px; margin: 0 0 15px;
+  background: transparent; color: #555; border: 2px dashed #bbb; font-size: 13px;
+}
+
+/* ---------- page (shared by the editor and the measuring copy) ---------- */
+
+.page {
+  position: relative;
+  width: var(--w); height: var(--h);
+  padding: var(--mt) var(--mr) var(--mb) var(--ml);
+  background: var(--bg);
+  color: var(--color);
+  font-family: var(--font);
+  overflow: hidden;
+}
+.page.transparent { background: repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 0 0 / 20px 20px; }
+.block { width: var(--wrap); margin: 0 auto; }
+.poem {
+  /* font comes from inline styles: the page's base style here, each run's style on its <span> */
+  line-height: var(--lh);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  text-indent: var(--hang) hanging each-line;   /* indent wrapped lines only */
+  caret-color: var(--color);
+}
+.pagenum {
+  position: absolute; left: 0; right: 0;
+  bottom: calc(var(--mb) / 2); transform: translateY(50%);
+  text-align: center; font-size: var(--numSize); line-height: 1;
+}
+
+#measure { position: fixed; left: -100000px; top: 0; visibility: hidden; pointer-events: none; }
